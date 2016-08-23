@@ -45,7 +45,7 @@ Contains a list of all assets to copy to the Repro Project along with their depe
 
 In Asset mode you can simply drag any assets you want copied into the object field, or use the standard Unity asset browser. Scene and Prefab modes are similar, except that the type of object allowed is filtered for scene files and prefabs respectively.
 
-In Wildcard mode you can simply type a path to an asset into the text box, or use the file browser button ‘...’ to pick a file from the project. Adding a directory to the list will automatically include all files in that directory and its subdirectory. A wildcard will include all files matching that pattern in the folder and its subdirectories. For Example, Assets/*.png would recursively copy all png files into the new project. Assets/Levels/MyFirstLevel/*.fbx would copy all fbx under Assets/Levels/MyFirstLevel. In general though, it is much simpler to just create a scene that shows your issue and then let Unity work out which assets are referenced by the scene.
+In Wildcard mode you can simply type a path to an asset into the text box, or use the file browser button ‘...’ to pick a file from the project. Adding a directory to the list will automatically include all files in that directory and its subdirectory. A wildcard will include all files matching that pattern in the folder and its subdirectories. For Example, `Assets/*.png` would recursively copy all png files into the new project. `Assets/Levels/MyFirstLevel/*.fbx` would copy all fbx under `Assets/Levels/MyFirstLevel`. In general though, it is much simpler to just create a scene that shows your issue and then let Unity work out which assets are referenced by the scene.
 
 The ‘-’ button after each entry in the list can be used to remove that entry.
 
@@ -56,10 +56,10 @@ The directory that the new project will be created in.
 You can add files here in the same way as Assets to Copy. Typically, these are assets that are required by all Repro Projects and can be set once the first time you create a Repro Project.
 
 **Open Project After Export**
-It can take a few minutes to copy all the assets in a larger Repro Project. This check box is a convenience feature to make Unity open the newly created project after it finishes copying files. This means you can leave the Repro Wizard running unattended, and it will have opened and imported the new project when your return.
+It can take a few minutes to copy all the assets in a larger Repro Project. This check box is a convenience feature to make Unity open the newly created project after it finishes copying files. This means you can leave the Repro Wizard running unattended, and it will have opened and imported the new project when you return.
 
 **Texture Size**
-Using this option you can automatically downscale all the textures in the newly created project. This is generally a great way to reduce the total size of the new project, at the cost of a slightly slower export. NOTE: this does not affect the textures in your source project, the scaling is only applied to the texture that is copied to the new project.
+Using this option you can automatically downscale all the textures in the newly created project. This is a great way to reduce the total size of the new project, at the cost of a slower export. NOTE: this does not affect the textures in your source project, the scaling is only applied to the texture that is copied to the new project.
 
 **Create Project**
 Hit this button to start the process of creating a new project.
@@ -68,5 +68,5 @@ Hit this button to start the process of creating a new project.
 
 ## Known Issues ##
 
-The tool doesn’t include any assets assigned to settings files (specifically the Graphics Settings window). These need to be added to the Common Files list manually.
-Dependencies of asset bundles are not tracked currently.
+* The tool doesn’t include any assets assigned to settings files (specifically the Graphics Settings window). These need to be added to the Common Files list manually.
+* Dependencies of asset bundles are not tracked currently.
