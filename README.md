@@ -7,7 +7,7 @@ In order to submit bugs to Unity we request a project that reproduces the proble
 * Download the Repro Wizard package and import it into your project.
 * After the package imports and the code finishes compiling, go to Window->Repro Project Wizard. You should see the following window open:
 
-![repro1.png](https://bitbucket.org/repo/Xx7ABa/images/2118616515-repro1.png)
+![repro1.png](https://bitbucket.org/repo/xL7eqo/images/1954899552-repro1.png)
 
 * Add a scene that shows the issue you want to include in your Repro Project to the Asset list at the top of the window.
 * Select a path for the new project in the Project Path field.
@@ -38,7 +38,7 @@ The Assets list is used to add files that are specific to the particular issue y
 The current state of the Repro Wizard window is saved to disk in the ReproProjectSettings file. Once you know which files need to be included in the Common Files list you can quickly reuse the Repro Wizard window by only changing which files are included in the Assets list.
 ### Wizard Window ###
 
-![repro2.png](https://bitbucket.org/repo/Xx7ABa/images/2266845781-repro2.png)
+![repro2.png](https://bitbucket.org/repo/xL7eqo/images/4201538918-repro2.png)
 
 **Assets to Copy**
 Contains a list of all assets to copy to the Repro Project along with their dependencies. Each entry has four modes: Scene, Prefab, Asset or Wildcard.
