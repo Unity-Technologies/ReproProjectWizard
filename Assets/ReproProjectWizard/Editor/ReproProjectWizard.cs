@@ -604,7 +604,11 @@ public class ReproProjectWizard : EditorWindow
             AssetDatabase.ImportAsset(temppath, ImportAssetOptions.ForceUpdate);
             TextureImporter importer = AssetImporter.GetAtPath(temppath) as TextureImporter;
             importer.isReadable = true;
-            importer.textureFormat = TextureImporterFormat.AutomaticTruecolor;
+#if UNITY_5_6_OR_NEWER
+			importer.textureCompression = TextureImporterCompression.Uncompressed;
+#else
+			importer.textureFormat = TextureImporterFormat.AutomaticTruecolor;
+#endif
             AssetDatabase.ImportAsset(temppath, ImportAssetOptions.ForceUpdate);
             sourceTex = AssetDatabase.LoadAssetAtPath<Texture2D>(temppath);
 
