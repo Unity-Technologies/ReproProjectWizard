@@ -1,0 +1,10 @@
+# Standard Unity Ignores
+Library
+Temp
+
+# Ignore these to keep the repository clean and to make it easy to include in other projects
+ProjectSettings
+Packages
+*.meta
+*.sln
+*.csproj
