@@ -1,10 +1,12 @@
 # Standard Unity Ignores
 Library
 Temp
+obj
 
 # Ignore these to keep the repository clean and to make it easy to include in other projects
 ProjectSettings
 Packages
+ReproProjectSettings.asset
 *.meta
 *.sln
 *.csproj

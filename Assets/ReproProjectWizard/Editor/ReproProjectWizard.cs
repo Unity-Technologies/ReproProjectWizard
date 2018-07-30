@@ -3,6 +3,7 @@ using UnityEngine.SceneManagement;
 using UnityEditor;
 using System.IO;
 using System.Collections.Generic;
+using UnityEngine.Rendering;
 
 /// <summary>
 /// Create a cut down repro project by copying the dependencies for a few key assets.
@@ -12,7 +13,7 @@ public class ReproProjectWizard : EditorWindow
     public static string SettingsPath = "Assets/ReproProjectWizard/ReproProjectSettings.asset";
     public static string[] TextureExtensions = new string[] { ".png", ".jpg" };
     public static string[] ImportTextureExtensions = new string[] { ".psd", ".tif", ".tiff", ".tga", ".gif", ".bmp", ".iff", ".pict" };
-    public static string TempTexturePath = "Assets/ReproProjectWizard/Temp";
+    public static string TempPath = "Assets/ReproProjectWizard/Temp";
 
     private bool m_IsInitialized = false;
 
@@ -304,14 +305,23 @@ public class ReproProjectWizard : EditorWindow
             }
 
             DisplayProgressBar("Creating Repro Project", "Finding Files", 0.05f, 0.1f);
+            CreateTempDirectory();
 
             // common project files
             AddFiles("ProjectSettings/*.asset");
             AddFiles("ProjectSettings/*.txt");
             AddFiles("Assets/*.cginc");
+            AddFiles("Assets/*.hlsl");
+            AddFiles("Assets/*SRPMARKER");
             AddFiles("Assets/*.dll");
             AddFiles("Assets/*.cs");
             AddFiles("Assets/*.rsp");
+            AddFiles("Assets/*.asmdef");
+            AddFiles("Packages/manifest.json");
+            AddFiles("Assets/*package.json");
+
+            // Get all the dependencies of the graphics settings
+            AddGraphicsSettings();
 
             // Find all dependencies
             DisplayProgressBar("Creating Repro Project", "Collect Dependencies", 0.1f, 0.2f);
@@ -454,10 +464,14 @@ public class ReproProjectWizard : EditorWindow
         {
             m_FilesToCopy.Add(file);
         }
+        AddDependencies(expandedInputs);
+    }
 
+    private void AddDependencies(HashSet<string> inputs)
+    {
         // find all dependencies
-        string[] inputArray = new string[expandedInputs.Count];
-        expandedInputs.CopyTo(inputArray);
+        string[] inputArray = new string[inputs.Count];
+        inputs.CopyTo(inputArray);
         string[] dependencies = AssetDatabase.GetDependencies(inputArray);
 
         // Add all files to be copied
@@ -468,18 +482,54 @@ public class ReproProjectWizard : EditorWindow
     }
 
     /// <summary>
+    /// Cleanup any existing temp directory and then create it again. 
+    /// </summary>
+    private void CreateTempDirectory()
+    {
+        if (Directory.Exists(TempPath))
+        {
+            Directory.Delete(TempPath, recursive: true);
+        }
+        Directory.CreateDirectory(TempPath);
+    }
+
+    /// <summary>
+    /// We need to get all the dependencies of the graphics settings
+    /// Grab everything we can from the settings that is exposed to script
+    /// </summary>
+    private void AddGraphicsSettings()
+    {
+        HashSet<string> settingsFiles = new HashSet<string>();
+        if (GraphicsSettings.renderPipelineAsset != null)
+        {
+            string rpAssetPath = AssetDatabase.GetAssetPath(GraphicsSettings.renderPipelineAsset);
+            Debug.LogFormat("Render Pipeline Asset {0}", rpAssetPath);
+            settingsFiles.Add(rpAssetPath);
+        }
+
+        foreach (BuiltinShaderType shaderType in System.Enum.GetValues(typeof(BuiltinShaderType)))
+        {
+            Shader shader = GraphicsSettings.GetCustomShader(shaderType);
+            if (shader != null)
+            {
+                string shaderPath = AssetDatabase.GetAssetPath(shader);
+                Debug.LogFormat("Shader {0}", shaderPath);
+                if (File.Exists(shaderPath))
+                {
+                    settingsFiles.Add(shaderPath);
+                }
+            }
+        }
+
+        AddDependencies(settingsFiles);
+    }
+
+    /// <summary>
     /// Copy all files into the new project.
     /// Also copy any meta file if one exists next to the source file.
     /// </summary>
     private void CopyFiles()
     {
-		// Cleanup previous temp directory
-		if (Directory.Exists(TempTexturePath))
-		{
-			Directory.Delete(TempTexturePath, recursive: true);
-		}
-		Directory.CreateDirectory(TempTexturePath);
-
 		if (!string.IsNullOrEmpty(m_ProgressBarTitle))
         {
             EditorUtility.DisplayProgressBar(m_ProgressBarTitle, m_ProgressBarInfo + "Directories", m_ProgressBarStart);
@@ -596,7 +646,7 @@ public class ReproProjectWizard : EditorWindow
         {
             // copy the source to a temp location
             string filename = Path.GetFileName(source);
-            string temppath = Path.Combine(TempTexturePath, filename);
+            string temppath = Path.Combine(TempPath, filename);
             File.Copy(source, temppath);
 
             // import the temp texture so we can access formats that aren't png/jpg
