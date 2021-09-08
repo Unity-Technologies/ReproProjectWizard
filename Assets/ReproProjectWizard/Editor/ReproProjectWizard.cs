@@ -317,8 +317,15 @@ public class ReproProjectWizard : EditorWindow
             AddFiles("Assets/*.cs");
             AddFiles("Assets/*.rsp");
             AddFiles("Assets/*.asmdef");
-            AddFiles("Packages/manifest.json");
             AddFiles("Assets/*package.json");
+            AddFiles("packages.config");
+            AddFiles("Packages/manifest.json");
+            AddFiles("Packages/packages-lock.json");
+            AddFiles("Packages/*.dll");
+            AddFiles("Packages/*.cs");
+            AddFiles("Packages/*.rsp");
+            AddFiles("Packages/*.asmdef");
+            AddFiles("Packages/*package.json");
 
             // Get all the dependencies of the graphics settings
             AddGraphicsSettings();
